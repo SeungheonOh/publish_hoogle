@@ -20,7 +20,7 @@ library
     exposed-modules:  MyLib
     -- other-modules:
     -- other-extensions:
-    build-depends:    base ^>=4.16.4.0
+    build-depends:    base
     hs-source-dirs:   src
     default-language: Haskell2010
 
@@ -29,9 +29,8 @@ executable publish-hoogle
     main-is:          Main.hs
     -- other-modules:
     -- other-extensions:
-    build-depends:
-        base ^>=4.16.4.0,
-        publish-hoogle
+    build-depends: base
+                 , publish-hoogle
 
     hs-source-dirs:   app
     default-language: Haskell2010

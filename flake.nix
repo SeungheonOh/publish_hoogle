@@ -1,6 +1,15 @@
 {
   description = "A very basic flake";
 
+  nixConfig = {
+    extra-experimental-features = [ "nix-command" "flakes" ];
+    extra-substituters = [ "https://cache.iog.io" ];
+    extra-trusted-public-keys = [ "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=" ];
+    allow-import-from-derivation = "true";
+    max-jobs = "auto";
+    auto-optimise-store = "true";
+  };  
+
   inputs = {
     haskellNix.url = "github:input-output-hk/haskell.nix";
     nixpkgs.follows = "haskellNix/nixpkgs-unstable";
@@ -21,7 +30,13 @@
 
           project = pkgs.haskell-nix.project' {
             src = ./.;
-            compiler-nix-name = "ghc963";
+            compiler-nix-name = "ghc928";
+
+            shell = {
+              nativeBuildInputs = with pkgs; [
+                act
+              ];
+            };
           };
           flake = project.flake { };
         in
