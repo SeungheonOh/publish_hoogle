@@ -26,13 +26,16 @@ jobs:
       run: |
         mkdir out        
         nix develop --command cabal haddock --builddir=./out | tee >(tail -1 | xargs -L 1 dirname > haddock_path)
-        echo "html_dock_path=$(cat haddock_path)" >> $GITHUB_ENV
+        echo "html_dock_path=$(cat haddock_path)" >> $GITHUB_OUTPUT
 
   publish:
     runs-on: ubuntu-latest    
     needs:
       - gen_haddock
     steps:
+    - name: TEST
+      run: |
+        echo ${{ needs.gen_haddock.outputs.html_dock_path }}
     - name: Setup Pages
       uses: actions/configure-pages@v4
     - name: Upload artifact
