@@ -6,9 +6,6 @@ on:
 jobs:
   bundle:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v18
@@ -23,13 +20,16 @@ jobs:
         nix develop --command cabal haddock --builddir=./out | tee >(tail -1 | xargs -L 1 dirname > haddock_path)
         echo "HADDOCK_PATH=$(cat haddock_path)" >> $GITHUB_ENV
 
+    - name: TEST
+      run: |
+        echo ${{ env.HADDOCK_PATH }}
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        # Upload entire repository
-        path: ${{ env.HADDOCK_PATH }}
+        path: './out'
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4        
