@@ -28,9 +28,16 @@ jobs:
       id: haddock_path      
       run: echo "html_dock_path=$(cat haddock_path)" >> $GITHUB_OUTPUT
 
+    - name: Setup directory
+      run: |
+        mkdir pages
+        mkdir pages/docs
+        cp ${{ steps.haddock_path.outputs.html_dock_path }}/* pages/docs -r
+        cp out pages/docs -r
+
     - name: Publish Documentation
       uses: peaceiris/actions-gh-pages@v3
       if: github.ref == 'refs/heads/master'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ${{ steps.haddock_path.outputs.html_dock_path }}    
+        publish_dir: ./pages
