@@ -25,8 +25,9 @@ jobs:
       id: build
       run: |
         mkdir out
-        nix develop --command cabal haddock --builddir=./out | tee >(tail -1 | xargs -L 1 dirname > haddock_path)
+        #nix develop --command cabal haddock --builddir=./out | tee >(tail -1 | xargs -L 1 dirname > haddock_path)
         echo "html_dock_path=$(cat haddock_path)" >> $GITHUB_OUTPUT
+        echo "html_dock_path=./out" >> $GITHUB_OUTPUT
 
   publish:
     runs-on: ubuntu-latest    
