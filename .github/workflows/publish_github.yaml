@@ -29,6 +29,10 @@ jobs:
         echo "html_dock_path=$(cat haddock_path)" >> $GITHUB_OUTPUT
     - name: TEST
       run: |
+        ls
+        cat haddock_path
+    - name: TEST2
+      run: |
         echo "${{ steps.build.outputs.html_dock_path }}"
     - name: Setup Pages
       uses: actions/configure-pages@v4
