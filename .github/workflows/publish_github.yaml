@@ -4,8 +4,13 @@ on:
     branches:
       - master
 jobs:
-  bundle:
+  permissions:
+    id-token: write
+    pages: write  
+  gen_haddock:
     runs-on: ubuntu-latest
+    outputs:
+      html_dock_path: ${{ steps.build.outputs.html_dock_path }}
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v18
@@ -15,21 +20,23 @@ jobs:
           extra-substituters = https://cache.iog.io
           extra-trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=
     - name: Build Haddock
+      id: build
       run: |
         mkdir out        
         nix develop --command cabal haddock --builddir=./out | tee >(tail -1 | xargs -L 1 dirname > haddock_path)
-        echo "HADDOCK_PATH=$(cat haddock_path)" >> $GITHUB_ENV
+        echo "html_dock_path=$(cat haddock_path)" >> $GITHUB_ENV
 
-    - name: TEST
-      run: |
-        echo ${{ env.HADDOCK_PATH }}
-
+  publish:
+    runs-on: ubuntu-latest    
+    needs:
+      - gen_haddock
+    steps:
     - name: Setup Pages
       uses: actions/configure-pages@v4
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: './out'
+        path: ${{ needs.gen_haddock.outputs.html_dock_path }}
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4        
