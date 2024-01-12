@@ -18,6 +18,12 @@ jobs:
           extra-substituters = https://cache.iog.io
           extra-trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=
     - name: Build Haddock
-      run: nix develop --command cabal haddock
+      run: |
+        mkdir out        
+        nix develop --command cabal haddock --builddir=./out
 
-          
+    - uses: actions/upload-artifact@v4
+      with:
+        name: haddock
+        path: ${{ github.workspace }}/out
+
