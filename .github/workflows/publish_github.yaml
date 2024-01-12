@@ -23,26 +23,22 @@ jobs:
           extra-trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=
     - name: Build Haddock
       id: build
+      run: nix develop --command cabal haddock --builddir=./out | tee >(tail -1 | xargs -L 1 dirname > haddock_path)
+      
+    - name: Get Haddock path
+      id: haddock_path      
       run: |
-        mkdir out
-        nix develop --command cabal haddock --builddir=./out | tee >(tail -1 | xargs -L 1 dirname > haddock_path)
-        echo "html_dock_path=\"$(cat haddock_path)\"" >> $GITHUB_OUTPUT
-        cat $GITHUB_OUTPUT        
-    - name: TEST
-      run: |
-        ls
-        cat haddock_path
-        echo "html_dock_path=$(cat haddock_path)"
-        cat $GITHUB_OUTPUT
+        echo "html_dock_path=$(cat haddock_path)" >> $GITHUB_OUTPUT
+        
     - name: TEST2
       run: |
-        echo "${{ steps.build.outputs.html_dock_path }}"
+        echo "${{ steps.haddock_path.outputs.html_dock_path }}"
     - name: Setup Pages
       uses: actions/configure-pages@v4
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: ${{ steps.build.outputs.html_dock_path }}
+        path: ${{ steps.haddock_path.outputs.html_dock_path }}
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4                
