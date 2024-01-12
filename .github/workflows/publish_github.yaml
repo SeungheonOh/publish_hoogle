@@ -25,10 +25,8 @@ jobs:
       id: build
       run: |
         mkdir out
-        #nix develop --command cabal haddock --builddir=./out | tee >(tail -1 | xargs -L 1 dirname > haddock_path)
-        #cat haddock_path
-        #echo "html_dock_path=$(cat haddock_path)" >> $GITHUB_OUTPUT
-        echo "html_dock_path=./out" >> $GITHUB_OUTPUT
+        nix develop --command cabal haddock --builddir=./out | tee >(tail -1 | xargs -L 1 dirname > haddock_path)
+        echo "html_dock_path=$(cat haddock_path)" >> $GITHUB_OUTPUT
     - name: TEST
       run: |
         echo "${{ steps.build.outputs.html_dock_path }}"
