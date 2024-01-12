@@ -27,18 +27,11 @@ jobs:
       
     - name: Get Haddock path
       id: haddock_path      
-      run: |
-        echo "html_dock_path=$(cat haddock_path)" >> $GITHUB_OUTPUT
-        
-    - name: TEST2
-      run: |
-        echo "${{ steps.haddock_path.outputs.html_dock_path }}"
-    - name: Setup Pages
-      uses: actions/configure-pages@v4
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
+      run: echo "html_dock_path=$(cat haddock_path)" >> $GITHUB_OUTPUT
+
+    - name: Publish Documentation
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/master'
       with:
-        path: ${{ steps.haddock_path.outputs.html_dock_path }}
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4                
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ${{ steps.haddock_path.outputs.html_dock_path }}    
