@@ -12,7 +12,7 @@ jobs:
   gen_haddock:
     runs-on: ubuntu-latest
     outputs:
-      html_dock_path: ${{ steps.build.outputs.html_dock_path }}
+      html_dock_path: ${{ steps.haddock_path.outputs.html_dock_path }}
     steps:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v18
