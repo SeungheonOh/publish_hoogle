@@ -5,8 +5,7 @@ on:
       - master
 
 permissions:
-  id-token: write
-  pages: write
+  contents: write
       
 jobs:    
   gen_haddock:
