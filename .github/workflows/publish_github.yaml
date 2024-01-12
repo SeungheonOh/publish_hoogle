@@ -27,10 +27,13 @@ jobs:
         mkdir out
         nix develop --command cabal haddock --builddir=./out | tee >(tail -1 | xargs -L 1 dirname > haddock_path)
         echo "html_dock_path=$(cat haddock_path)" >> $GITHUB_OUTPUT
+        cat $GITHUB_OUTPUT        
     - name: TEST
       run: |
         ls
         cat haddock_path
+        echo "html_dock_path=$(cat haddock_path)"
+        cat $GITHUB_OUTPUT
     - name: TEST2
       run: |
         echo "${{ steps.build.outputs.html_dock_path }}"
